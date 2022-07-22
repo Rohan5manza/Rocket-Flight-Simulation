@@ -1,0 +1,34 @@
+#IMPORTANT note :- this code does not take into account many things like drag 
+#and launch angle. It is possible to take them into consideration, hence this
+#is work for future, where more things can be added to this simple code
+
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('dark_background')
+
+#main function
+
+totalmass=1 #1 kg rocket
+drymass=0.986
+burntime=3.5
+totalImpulse=49.6
+propellantMass=0.064
+avgThrust=totalImpulse/burntime
+massFlowRate=propellantMass/burntime
+
+time=np.linspace(0,10,100,False)
+
+index=int(np.where(time==burntime)[0]+1)
+thrust=np.append(np.repeat(avgThrust,index),np.repeat(0,len(time)-index))
+mass=np.append(np.repeat(totalmass,index)-time[0:index]*massFlowRate,np.repeat(drymass,len(time)-index))
+acceleration=thrust/mass-9.81
+velocity=integrateGraph(time,acceleration)
+displacement=integrateGraph(time,velocity)
+
+#func function
+def integrateGraph(time,array):
+    resArray=[0]
+    for n in range(0,len(time)-1):
+        resArray.append(resArray[-1]+0.5*(array[n-1]+array[n])*(time[n+1]-time[n]))
+
+    return np.array(resArray)
